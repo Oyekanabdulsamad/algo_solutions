@@ -1,0 +1,101 @@
+========================================================================
+ PROBLEM 1 - SUM OF DISTINCT ELEMENTS OF TWO SETS (using arrays)
+========================================================================
+
+ALGORITHM SumDistinct
+  INPUT : set1[1..n1], set2[1..n2]
+  OUTPUT: sum (sum of elements present in only ONE of the two sets)
+
+BEGIN
+  sum <- 0
+
+  // elements of set1 not present in set2
+  FOR i <- 1 TO n1 DO
+      present <- FALSE
+      FOR j <- 1 TO n2 DO
+          IF set1[i] = set2[j] THEN present <- TRUE
+      END FOR
+      IF present = FALSE THEN sum <- sum + set1[i]
+  END FOR
+
+  // elements of set2 not present in set1
+  FOR j <- 1 TO n2 DO
+      present <- FALSE
+      FOR i <- 1 TO n1 DO
+          IF set2[j] = set1[i] THEN present <- TRUE
+      END FOR
+      IF present = FALSE THEN sum <- sum + set2[j]
+  END FOR
+
+  RETURN sum
+END
+
+Example: set1 = [3,1,7,9], set2 = [2,4,1,9,3]  ->  sum = 7 + 2 + 4 = 13
+
+
+========================================================================
+ PROBLEM 2 - DOT PRODUCT AND ORTHOGONALITY
+========================================================================
+
+--- Question 1: dot_product as a PROCEDURE (ps is an OUTPUT parameter) ---
+
+PROCEDURE dot_product(IN  v1[1..n], v2[1..n],
+                      IN  n,
+                      OUT ps)
+BEGIN
+  ps <- 0
+  FOR i <- 1 TO n DO
+      ps <- ps + v1[i] * v2[i]
+  END FOR
+END
+
+
+--- Question 2: test orthogonality for n pairs (calls the PROCEDURE) ---
+
+ALGORITHM Orthogonality
+BEGIN
+  READ dim                 // dimension of the vectors
+  READ nbPairs             // number of pairs to test
+
+  FOR k <- 1 TO nbPairs DO
+      READ v1[1..dim]
+      READ v2[1..dim]
+
+      dot_product(v1, v2, dim, ps)   // ps receives the result
+
+      IF ps = 0 THEN
+          WRITE 'Pair ', k, ': the vectors are ORTHOGONAL'
+      ELSE
+          WRITE 'Pair ', k, ': the vectors are NOT orthogonal'
+      END IF
+  END FOR
+END
+
+
+--- Question 3: same algorithm using a FUNCTION instead of a procedure ---
+
+FUNCTION dot_product(v1[1..n], v2[1..n], n) : REAL
+BEGIN
+  ps <- 0
+  FOR i <- 1 TO n DO
+      ps <- ps + v1[i] * v2[i]
+  END FOR
+  RETURN ps
+END
+
+ALGORITHM Orthogonality
+BEGIN
+  READ dim
+  READ nbPairs
+
+  FOR k <- 1 TO nbPairs DO
+      READ v1[1..dim]
+      READ v2[1..dim]
+
+      IF dot_product(v1, v2, dim) = 0 THEN   // function used directly
+          WRITE 'Pair ', k, ': the vectors are ORTHOGONAL'
+      ELSE
+          WRITE 'Pair ', k, ': the vectors are NOT orthogonal'
+      END IF
+  END FOR
+END
